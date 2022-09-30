@@ -10,6 +10,7 @@ fi
 # Allow the container to be started with `--user`, if running as root drop privileges
 if [ "$1" = 'btc_oneshot' -a "$(id -u)" = '0' ]; then
 	chown -R bitcoin .
+	service tor start
 	exec gosu bitcoin "$0" "$@"
 fi
 

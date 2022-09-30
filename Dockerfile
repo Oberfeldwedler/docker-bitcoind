@@ -53,9 +53,22 @@ COPY --from=builder /opt/ /opt/
 
 RUN apt update \
     && apt install -y --no-install-recommends gosu \
+    && apt install -y tor pwgen dialog \
     && apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && ln -sv /opt/bitcoin/bin/* /usr/local/bin
+    && ln -sv /opt/bitcoin/bin/* /usr/local/bin \
+    && mkdir -p /var/run/tor \
+    && chown -R debian-tor:debian-tor /var/run/tor \
+    && usermod -a -G debian-tor bitcoin
+
+COPY torrc /etc/tor/torrc
+
 
 COPY ./bin ./docker-entrypoint.sh /usr/local/bin/
 
+
+
+
+
 CMD ["btc_oneshot"]
+
+ 
